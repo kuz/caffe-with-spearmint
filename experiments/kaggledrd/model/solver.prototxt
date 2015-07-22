@@ -1,0 +1,12 @@
+net: "PLACEHOLDER_NET"
+test_iter: 50
+test_interval: 3000
+base_lr: OPTIMIZE{"type": "INT", "transform": "NEGEXP10", "min": 1, "max": 7}
+lr_policy: "fixed"
+display: 50
+max_iter: 3000
+momentum: OPTIMIZE{"type": "ENUM", "options": [0.5, 0.9, 0.95]}
+weight_decay: OPTIMIZE{"type": "FLOAT", "min": 0, "max": 0.2}
+snapshot: 5000
+snapshot_prefix: "PLACEHOLDER_MODEL_STORE"
+solver_mode: GPU
