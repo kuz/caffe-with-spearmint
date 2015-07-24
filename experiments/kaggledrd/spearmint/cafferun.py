@@ -58,11 +58,17 @@ def cafferun(params):
     caffe_return_code = subprocess.call("~/Software/Caffe/build/tools/caffe train --solver ../tmp/%s_solver.prototxt 2> ../caffeout/%s_log.txt" % (prefix, prefix), shell=True)
     print 'CAFFE RETURN CODE ' + str(caffe_return_code)
 
-    # run the performace measure estimator
-    logbuffer = open('../caffeout/%s_log.txt' % prefix, 'r').read()
-    pattern = re.compile('Test net output #1: loss = [0-9]+\.[0-9]+')
-    matches = re.findall(pattern, logbuffer)
-    result = float(re.search('[0-9]+\.[0-9]+', matches[-1]).group(0))
+    # set result to None by default
+    result = None
+
+    # if Caffe ran successfully update the result
+    if int(caffe_return_code) == 0:
+
+        # run the performace measure estimator
+        logbuffer = open('../caffeout/%s_log.txt' % prefix, 'r').read()
+        pattern = re.compile('Test net output #1: loss = [0-9]+\.[0-9]+')
+        matches = re.findall(pattern, logbuffer)
+        result = float(re.search('[0-9]+\.[0-9]+', matches[-1]).group(0))
 
     print '-----------------------------'
     print prefix, result
