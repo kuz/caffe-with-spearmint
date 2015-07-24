@@ -95,7 +95,7 @@ class ConfigFile:
             f.write(self.buffer)
 
         # store parsed parameters, this is needed to restore the transformations from within the Spearmint loop
-        with open(experiment_path + '/tmp/parameters.pkl', 'wb') as f:
+        with open(experiment_path + '/tmp/optparams.pkl', 'wb') as f:
             cPickle.dump(self.parameters, f)
 
 
