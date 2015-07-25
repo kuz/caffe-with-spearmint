@@ -9,11 +9,11 @@ layer {
   }
   transform_param {
     mirror: false
-    mean_file: "../data/drdnet_mean_train.binaryproto"
+    mean_file: "../data/mean_train.binaryproto"
   }
   data_param {
-    source: "../data/drd_train_lmdb"
-    batch_size: 128
+    source: "../data/train_lmdb"
+    batch_size: 32
     backend: LMDB
   }
 }
@@ -27,11 +27,11 @@ layer {
   }
   transform_param {
     mirror: false
-    mean_file: "../data/drdnet_mean_train.binaryproto"
+    mean_file: "../data/mean_train.binaryproto"
   }
   data_param {
-    source: "../data/drd_val_lmdb"
-    batch_size: 128
+    source: "../data/val_lmdb"
+    batch_size: 32
     backend: LMDB
   }
 }
@@ -50,7 +50,7 @@ layer {
     decay_mult: 0
   }
   convolution_param {
-    num_output: OPTIMIZE{"type": "INT", "transform": "X10", "min": 1, "max": 15}
+    num_output: OPTIMIZE{"type": "INT", "transform": "X10", "min": 1, "max": 10}
     kernel_size: OPTIMIZE{"type": "INT", "min": 3, "max": 30}
     stride: OPTIMIZE{"type": "INT", "min": 2, "max": 5}
     weight_filler {

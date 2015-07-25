@@ -4,11 +4,12 @@ from copy import copy
 from cwsm.spearmint import ConfigFile
 import subprocess
 import os
+import cPickle
 
 # binary locations
 CAFFE_ROOT = '/home/kuz/Software/Caffe'  # without the trailing slash
 SPEARMINT_ROOT = '/home/kuz/Software/Spearmint'  # without the trailing slash
-MONDOGB_BIN = '/usr/bin/mongod'
+MONGODB_BIN = '/usr/bin/mongod'
 
 # command line arguments
 parser = argparse.ArgumentParser(description='Run hyperparameter seacrh for a caffe model.')
@@ -50,7 +51,7 @@ demandpath(args.experiment + '/model/trainval.prototxt', 'Your Caffe network des
 print 'Removing previous results and temporary files ...'
 subprocess.call('bash ' + SPEARMINT_ROOT + '/spearmint/cleanup.sh' + ' ' + args.experiment + '/spearmint', shell=True)
 subprocess.call('rm ' + args.experiment + '/caffeout/*', shell=True)
-subprocess.call('rm ' + args.experiment + '/spearmint/config.json', shell=True)
+subprocess.call('rm -r ' + args.experiment + '/spearmint/*', shell=True)
 subprocess.call('rm ' + args.experiment + '/tmp/*', shell=True)
 
 # store genral parameters for the future use
@@ -87,10 +88,10 @@ smconfig.footer()
 smconfig.save(args.experiment)
 
 # move caffe function optimizer to the Spermint experimnet directory
-subprocess.call('cp cwsm/cafferun.py %s/spearmint' % experimnet_path, shell=True)
+subprocess.call('cp cwsm/cafferun.py %s/spearmint' % args.experiment, shell=True)
 
 # store general parameters
-with open(experiment_path + '/tmp/genparams.pkl', 'wb') as f:
+with open(args.experiment + '/tmp/genparams.pkl', 'wb') as f:
     cPickle.dump(genparams, f)
 
 # generate .prototxt templates

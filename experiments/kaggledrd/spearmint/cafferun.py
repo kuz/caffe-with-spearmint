@@ -8,9 +8,12 @@ from datetime import datetime
 
 def cafferun(params):
 
-    # load full parameter descriptions
-    with open('../tmp/parameters.pkl', 'rb') as f:
+    # load general and optimization parameters
+    with open('../tmp/optparams.pkl', 'rb') as f:
         paramdescr = cPickle.load(f)
+    with open('../tmp/genparams.pkl', 'rb') as f:
+        genparams = cPickle.load(f)
+    CAFFE_ROOT = genparams['CAFFE_ROOT']
 
     # transform parameters accoring to transformation specified in the model file
     print params
@@ -55,7 +58,7 @@ def cafferun(params):
         f.write(solver)
 
     # run caffe training procedure
-    caffe_return_code = subprocess.call("~/Software/Caffe/build/tools/caffe train --solver ../tmp/%s_solver.prototxt 2> ../caffeout/%s_log.txt" % (prefix, prefix), shell=True)
+    caffe_return_code = subprocess.call(CAFFE_ROOT + '/build/tools/caffe train --solver ../tmp/%s_solver.prototxt 2> ../caffeout/%s_log.txt' % (prefix, prefix), shell=True)
     print 'CAFFE RETURN CODE ' + str(caffe_return_code)
 
     # set result to None by default
