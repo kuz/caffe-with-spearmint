@@ -10,9 +10,10 @@ weight_decay: OPTIMIZE{"type": "FLOAT", "min": 0, "max": 0.2}
 ```
 and CWSM will use Spearmint to find the best `weight_decay` for you.  
 
-For those not familiar with Caffe: you might have heard that choosing right parameters for a deep neural network is a painful process. This tools employs the power of Bayesian optimization to make this search automatic for the Caffe framework.
+For those not familiar with Caffe: you might have heard that choosing right parameters for a deep neural network is a painful process. This tool employs the power of Bayesian optimization to make this search automatic for the models described in the Caffe framework.
 
 The `OPTIMIZE` keyword can be used both in `solver.prototxt` and `trainval.prototxt` for as many parameters simultaneuosly as you want (be careful: too many parameters might take too long).  
+  
 There are few special tricks which may seem odd at first, but, as you will see below, they are justified. Take a look at `examples/mnist` and read the "General Setup" section for a quick start. Refer to "Optimization Parameters" section below for more detailed documentation.
 
 
@@ -20,14 +21,14 @@ General Setup
 -------------
 
 #### STEP 1: Install Caffe
-Follow the instructions in the [Caffe](https://github.com/BVLC/caffe) repository. Once installed set the `CAFFE_ROOT` variable to point to the Caffe repository root so that `CAFFE_ROOT/build/tools/caffe` would be the Caffe binary.
+Follow the instructions in the [Caffe](https://github.com/BVLC/caffe) repository. Once installed set the `CAFFE_ROOT` variable in the `run.py` script to point to the Caffe repository root so that `CAFFE_ROOT/build/tools/caffe` would be the Caffe binary.
 
 #### STEP 2: Install Spearmint
-Follow the instruction in the [Spearmint](https://github.com/HIPS/Spearmint) repository. Once install set the `SPEARMINT_ROOT` variable to point to the Spearmint repository root so that `SPEARMINT_ROOT/spearmint/main.py` is the Spearmint main script.
+Follow the instruction in the [Spearmint](https://github.com/HIPS/Spearmint) repository. Once install set the `SPEARMINT_ROOT` variable in the `run.py` scipt to point to the Spearmint repository root so that `SPEARMINT_ROOT/spearmint/main.py` is the Spearmint main script.
 
 #### STEP 3: Prepare experiment directory
-The only parameter to CWSM's `run.py` script needs is the location of the experiment directory. Create your `experiments/myexperiment` and you are ready to go to the next step, `run.py` will take care of creating the structure and will tell you if something is missing.  
-The final structure will look like this:
+The main parameter CWSM's `run.py` script needs is the location of the experiment directory. Create your `experiments/myexperiment` and you are ready to go to the next step, `run.py` will take care of creating the structure and will tell you what to do next.  
+For the refernce, the final structure will look like this:
 ```
 myexperiment
   caffeout                  # [created automatically] will be filled with Caffe output
@@ -49,7 +50,7 @@ myexperiment
 ```
 
 #### STEP 4: Describe your Caffe model
-Under `experiments/myexperiment/model` CWSM will expect to find three files:  
+Under `experiments/myexperiment/model` CWSM will expect to find two (in special cases three) files:  
 **`solver.prototxt`**  
 Take a look at `examples/mnist/model/solver.prototxt`, pay attention to the `max_iter` parameter -- it defines how long each run will take.  
 **`trainval.prototxt`**  
@@ -74,7 +75,7 @@ layer {
 }
 ```
 **`val.prototxt`**  
-The last layer should be named `prob` for kappa parser to pick it up correctly
+This file is needed if you use an evaluation parameters which is not built-in in Caffe. Currently there is only one such implemented: squared kappa. To use that you will need to create `val.prototxt` which mimicks `trainval.prototxt`. The difference is that instread of `loss`/`accuracy` layers `val.prototxt` should have a layer be named `prob`. This layes is used to extract predictions used to calculate kappa.
 ```
 layer {
   name: "prob"
@@ -87,7 +88,7 @@ layer {
 #### STEP 5: Run the optimization
 Make sure you have Caffe in your `$PYTHONPATH`.  
 **The `run.py` script has to be started from the repository root:**  
-Assuming `CWSM_ROOT` is the location of this repository do the following  
+Assuming `CWSM_ROOT` is the location of this repository, do the following:  
 ```
 cd CWSM_ROOT
 export PYTHONPATH=CWSM_ROOT:$PYTHONPATH
@@ -103,7 +104,7 @@ Leave the processes running for a night and in the morning have a look at the la
 Minimum expected objective value under model is 0.05752 (+/- 0.01416), at location:
 <...>
 ```
-message in the `STDOUT`. There is a chance that it will provide you with the best parameter configuation you've seen so far.
+message in `STDOUT`. There is a chance that it will provide you with the best parameter configuation you've seen so far.
 
 Optimization Parameters
 -----------------------
