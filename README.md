@@ -14,7 +14,7 @@ For those not familiar with Caffe: you might have heard that choosing right para
 
 The `OPTIMIZE` keyword can be used both in `solver.prototxt` and `trainval.prototxt` for as many parameters simultaneuosly as you want (be careful: too many parameters might take too long).  
   
-There are few special tricks which may seem odd at first, but, as you will see below, they are justified. Take a look at `examples/mnist` and read the "General Setup" section for a quick start. Refer to "Optimization Parameters" section below for more detailed documentation.
+There are few special tricks which may seem odd at first, but, as you will see below, they are justified. Take a look at [`examples/mnist`](examples/mnist) and read the "General Setup" section for a quick start. Refer to "Optimization Parameters" section below for more detailed documentation.
 
 
 General Setup
@@ -52,7 +52,7 @@ myexperiment
 #### STEP 4: Describe your Caffe model
 Under `experiments/myexperiment/model` CWSM will expect to find two (in special cases three) files:  
 **`solver.prototxt`**  
-Take a look at `examples/mnist/model/solver.prototxt`, pay attention to the `max_iter` parameter -- it defines how long each run will take.  
+Take a look at [`examples/mnist/model/solver.prototxt`](examples/mnist/model/solver.prototxt), pay attention to the `max_iter` parameter -- it defines how long each run will take.  
 **`trainval.prototxt`**  
 This file is used during training, if you are going to optimize accuracy you should have a layer named "accuracy", for example
 ```
@@ -95,13 +95,13 @@ export PYTHONPATH=CWSM_ROOT:$PYTHONPATH
 ```
 Now you are ready to run!
 ```
-python run.py --experiment experiments/mnist
+python run.py --experiment experiments/mnist --optimize accuracy
 ```
 
 #### STEP 6: Enjoy!
 Leave the processes running for a night and in the morning have a look at the latest
 ```
-Minimum expected objective value under model is 0.05752 (+/- 0.01416), at location:
+Minimum expected objective value under model is -0.99590 (+/- 0.08043), at location:
 <...>
 ```
 message in `STDOUT`. There is a chance that it will provide you with the best parameter configuation you've seen so far.
