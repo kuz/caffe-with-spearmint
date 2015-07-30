@@ -13,7 +13,7 @@ layer {
   }
   data_param {
     source: "../data/train_lmdb"
-    batch_size: 32
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -31,7 +31,7 @@ layer {
   }
   data_param {
     source: "../data/val_lmdb"
-    batch_size: 32
+    batch_size: 1
     backend: LMDB
   }
 }
@@ -133,16 +133,8 @@ layer {
 }
 
 layer {
-  name: "accuracy"
-  type: "Accuracy"
+  name: "prob"
+  type: "Softmax"
   bottom: "fc2"
-  bottom: "label"
-  top: "accuracy"
-}
-layer {
-  name: "loss"
-  type: "SoftmaxWithLoss"
-  bottom: "fc2"
-  bottom: "label"
-  top: "loss"
+  top: "prob"
 }
