@@ -1,5 +1,7 @@
 Caffe with Spearmint (CWSM)
 ===========================
+<img align="right" src="http://ikuz.eu/Pictures/cwsmlogo.png" width="250px"/>
+
 Automatic [Caffe](https://github.com/BVLC/caffe) parameter search via [Spearmint](https://github.com/HIPS/Spearmint) Bayesian optimisation. For those familiar with Caffe: now instead of specifying 
 ```
 weight_decay: 0.05
@@ -175,3 +177,8 @@ Number which goes to Spearmint corresponds to log with base <N> of an actual num
 TODO
 ----
 * Extract summary from MongoDB in some readable form
+
+Thanks!
+-------
+* To [annitrolla](https://github.com/annitrolla) for the logo!
+* To [tambetm](https://github.com/tambetm) and [rdtm](https://github.com/rdtm) for discussions.
