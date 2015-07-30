@@ -5,6 +5,7 @@ from cwsm.spearmint import ConfigFile
 import subprocess
 import os
 import cPickle
+import time
 
 # binary locations
 CAFFE_ROOT = '/home/hpc_kuz/Software/Caffe'  # without the trailing slash
@@ -19,6 +20,11 @@ args = parser.parse_args()
 trainnetfile = args.experiment + '/model/trainval.prototxt'
 valnetfile = args.experiment + '/model/val.prototxt'
 solverfile = args.experiment + '/model/solver.prototxt'
+
+# check that PYTHONPATH has CWSM root
+if os.getcwd() not in os.environ['PYTHONPATH'].split(':'):
+    print 'CWSM root directory is not in $PYTHONPATH, please run\nexport PYTHONPATH=%s:$PYTHONPATH' % os.getcwd()
+    exit()
 
 # run checks that all the experiment folder structure is in place and third-party software is available
 def ensurepath(path):
@@ -53,6 +59,11 @@ demandpath(args.experiment + '/data/val_lmdb', 'Please put your validation LMDB 
 demandpath(args.experiment + '/model/solver.prototxt', 'Your Caffe solver file should be located at %s.')
 demandpath(args.experiment + '/model/trainval.prototxt', 'Your Caffe network description file should be located at %s.')
 
+# run MongoDB
+subprocess.call('pkill mongod', shell=True)
+time.sleep(2)
+subprocess.call('%s --fork --logpath %s/mongodb/log.txt --dbpath %s/mongodb' % (MONGODB_BIN, args.experiment, args.experiment), shell=True)
+
 # clearn previous results
 print 'Removing previous results and temporary files ...'
 subprocess.call('bash ' + SPEARMINT_ROOT + '/spearmint/cleanup.sh' + ' ' + args.experiment + '/spearmint', shell=True)
@@ -65,9 +76,6 @@ genparams = {}
 genparams['CAFFE_ROOT'] = CAFFE_ROOT
 genparams['SPEARMINT_ROOT'] = SPEARMINT_ROOT
 genparams['optimize'] = args.optimize
-
-# run MongoDB
-# MONGODB_BIN
 
 # read in caffe .prototxt files
 trainnet = open(trainnetfile, 'r').read()
