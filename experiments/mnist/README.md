@@ -49,6 +49,15 @@ Results
 The network with default parameters for the MNIST dataset provided in [Caffe examples](https://github.com/BVLC/caffe/tree/master/examples/mnist) achieves **~0.99**.  
 With the parameters
 ```
-TODO: re-run and paste parameters
+NAME          TYPE       VALUE
+----          ----       -----
+num_output_1  int        3           # 1st conv size 30
+weight_decay  float      0.000100
+num_output_3  int        3           # 1st fc size 300 
+num_output_2  int        7           # 2nd conv size 70
+momentum_1    float      0.800000
+base_lr_1     int        1           # base LR 0.1
+kernel_size_  int        7           # 1st conv size
+kernel_size_  int        3           # 2nd conv size
 ```
-proposed by CWSM it is possible to squeeze **~0.995**
+proposed by CWSM it is possible to squeeze **~0.9931**
