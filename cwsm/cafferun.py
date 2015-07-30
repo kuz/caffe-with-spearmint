@@ -5,6 +5,7 @@ import string
 import re
 import subprocess
 from datetime import datetime
+from cwsm.performance import Performance
 
 def cafferun(params):
 
@@ -14,6 +15,7 @@ def cafferun(params):
     with open('../tmp/genparams.pkl', 'rb') as f:
         genparams = cPickle.load(f)
     CAFFE_ROOT = genparams['CAFFE_ROOT']
+    optimize = genparams['optimize']
 
     # transform parameters accoring to transformation specified in the model file
     print params
@@ -41,11 +43,17 @@ def cafferun(params):
     prefix = datetime.now().strftime('%Y-%d-%m-%H-%M-%S')
 
 	# generate .prototxt files with current set of paramters
-    net = open('../tmp/template_trainval.prototxt', 'r').read()
+    trainnet = open('../tmp/template_trainval.prototxt', 'r').read()
     solver = open('../tmp/template_solver.prototxt', 'r').read()
     for p in params:
-        net = string.replace(net, 'OPTIMIZE_' + p, str(params[p][0]), 1)
+        trainnet = string.replace(trainnet, 'OPTIMIZE_' + p, str(params[p][0]), 1)
         solver = string.replace(solver, 'OPTIMIZE_' + p, str(params[p][0]), 1)
+
+    # kappa optimizer has a special treatment
+    if optimize == 'kappa':
+        valnet = open('../tmp/template_val.prototxt', 'r').read()
+        for p in params:
+            valnet = string.replace(valnet, 'OPTIMIZE_' + p, str(params[p][0]), 1)
 
     # update paths for this run
     solver = string.replace(solver, 'PLACEHOLDER_NET', '../tmp/%s_trainval.prototxt' % prefix, 1)
@@ -53,7 +61,10 @@ def cafferun(params):
     
     # store .prototxt for this run
     with open('../tmp/%s_trainval.prototxt' % prefix, 'w') as f:
-        f.write(net)
+        f.write(trainnet)
+    if optimize == 'kappa':
+        with open('../tmp/%s_val.prototxt' % prefix, 'w') as f:
+            f.write(valnet)
     with open('../tmp/%s_solver.prototxt' % prefix, 'w') as f:
         f.write(solver)
 
@@ -68,10 +79,14 @@ def cafferun(params):
     if int(caffe_return_code) == 0:
 
         # run the performace measure estimator
-        logbuffer = open('../caffeout/%s_log.txt' % prefix, 'r').read()
-        pattern = re.compile('Test net output #1: loss = [0-9]+\.[0-9]+')
-        matches = re.findall(pattern, logbuffer)
-        result = float(re.search('[0-9]+\.[0-9]+', matches[-1]).group(0))
+        if optimize == 'loss':
+            result = Performance.loss(prefix)
+        elif optimize == 'accuracy':
+            result = Performance.accuracy(prefix)
+        elif optimize == 'kappa':
+            result = Performance.kappasq(prefix, CAFFE_ROOT)
+        else:
+            print 'ERROR: Unknown perfomance measure %s' % optimize
 
     print '-----------------------------'
     print prefix, result
