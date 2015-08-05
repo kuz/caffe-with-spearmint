@@ -144,5 +144,5 @@ if args.optimize == 'kappa':
         f.write(tmpl_valnet)
 
 # start Spearmint
-subprocess.call("python ~/Software/Spearmint/spearmint/main.py %s/spearmint" % args.experiment, shell=True)
+subprocess.call("python %s/spearmint/main.py %s/spearmint" % (SPEARMINT_ROOT, args.experiment), shell=True)
 
