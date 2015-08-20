@@ -99,8 +99,9 @@ export PYTHONPATH=CWSM_ROOT:$PYTHONPATH
 ```
 Now you are ready to optimize!
 ```
-python run.py --experiment experiments/mnist --optimize accuracy
+python run.py --experiment experiments/mnist --optimize accuracy --optimizewrt best
 ```
+where `--optimizewrt` can be either `last`, meaning that once a Caffe run is completed the very last accuracy/loss result will be given to Spearmint for evaluation, or `best` to pick the best result from all the evaluation phases.
 
 #### STEP 6: Enjoy!
 Leave the process running for a night and in the morning have a look at the latest

@@ -13,25 +13,35 @@ import numpy as np
 class Performance:
 
     @staticmethod
-    def loss(prefix):
+    def loss(prefix, wrt):
         logbuffer = open('../caffeout/%s_log.txt' % prefix, 'r').read()
         pattern = re.compile('Test net output #[0-9]+: loss = [0-9]+\.[0-9]+')
         matches = re.findall(pattern, logbuffer)
-        result = float(re.search('[0-9]+\.[0-9]+', matches[-1]).group(0))
+        if wrt == 'last':
+            result = float(re.search('[0-9]+\.[0-9]+', matches[-1]).group(0))
+        elif wrt == 'best':
+            result = min([float(re.search('[0-9]+\.[0-9]+', match).group(0)) for match in matches])
+        else:
+            raise ValueError('Unknown optimizewrt value: %s.', wrt)
         return result
 
     @staticmethod
-    def accuracy(prefix):
+    def accuracy(prefix, wrt):
         logbuffer = open('../caffeout/%s_log.txt' % prefix, 'r').read()
         pattern = re.compile('Test net output #[0-9]+: accuracy = [0-9]+\.[0-9]+')
         matches = re.findall(pattern, logbuffer)
-        result = float(re.search('[0-9]+\.[0-9]+', matches[-1]).group(0))
-        
+        if wrt == 'last':
+            result = float(re.search('[0-9]+\.[0-9]+', matches[-1]).group(0))
+        elif wrt == 'best':
+            result = max([float(re.search('[0-9]+\.[0-9]+', match).group(0)) for match in matches])
+        else:
+            raise ValueError('Unknown optimizewrt value: %s.', wrt)
+
         # Spearmint by default is trying to minimize, therefore return -accuracy
         return -result
 
     @staticmethod
-    def kappasq(prefix, CAFFE_ROOT):
+    def kappasq(prefix, CAFFE_ROOT, wrt):
         
         # remove previous features
         subprocess.call('rm -r ../tmp/features', shell=True)

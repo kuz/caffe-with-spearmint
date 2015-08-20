@@ -1,7 +1,6 @@
 net: "PLACEHOLDER_NET"
 test_iter: 100
-# CWSM: No need to evaluate intermediate models, save time by setting test_interval to be equal to max_iter
-test_interval: 10000
+test_interval: 500
 # Let CWSM choose best base learning rate from {0.1, 0.01, 0.001}
 base_lr: OPTIMIZE{"type":"INT", "transform":"NEGEXP10", "min": 1, "max": 3}
 momentum: OPTIMIZE{"type":"FLOAT", "min": 0.8, "max": 0.95}
@@ -10,7 +9,7 @@ weight_decay: OPTIMIZE{"type":"FLOAT", "min": 0.0001, "max": 0.01}
 lr_policy: "inv"
 gamma: 0.0001
 power: 0.75
-display: 100
+display: 500
 max_iter: 10000
 snapshot: 10000
 snapshot_prefix: "PLACEHOLDER_MODEL_STORE"

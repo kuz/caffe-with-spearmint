@@ -16,6 +16,7 @@ MONGODB_BIN = '/home/hpc_kuz/Software/mongodb/mongodb-linux-x86_64-3.0.4/bin/mon
 parser = argparse.ArgumentParser(description='Run hyperparameter seacrh for a caffe model.')
 parser.add_argument('--experiment', type=str, required=True, help='Exeriment root directory')
 parser.add_argument('--optimize', type=str, required=True, help='Performance measure to optimize: loss, accuracy, kappa')
+parser.add_argument('--optimizewrt', type=str, required=True, help='Performance results can be reported from "last" or from the "best" iteration within each run')
 args = parser.parse_args()
 trainnetfile = args.experiment + '/model/trainval.prototxt'
 valnetfile = args.experiment + '/model/val.prototxt'
@@ -76,6 +77,7 @@ genparams = {}
 genparams['CAFFE_ROOT'] = CAFFE_ROOT
 genparams['SPEARMINT_ROOT'] = SPEARMINT_ROOT
 genparams['optimize'] = args.optimize
+genparams['optimizewrt'] = args.optimizewrt
 
 # read in caffe .prototxt files
 trainnet = open(trainnetfile, 'r').read()

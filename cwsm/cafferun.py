@@ -16,6 +16,7 @@ def cafferun(params):
         genparams = cPickle.load(f)
     CAFFE_ROOT = genparams['CAFFE_ROOT']
     optimize = genparams['optimize']
+    optimizewrt = genparams['optimizewrt']
 
     # transform parameters accoring to transformation specified in the model file
     print params
@@ -80,11 +81,11 @@ def cafferun(params):
 
         # run the performace measure estimator
         if optimize == 'loss':
-            result = Performance.loss(prefix)
+            result = Performance.loss(prefix, optimizewrt)
         elif optimize == 'accuracy':
-            result = Performance.accuracy(prefix)
+            result = Performance.accuracy(prefix, optimizewrt)
         elif optimize == 'kappa':
-            result = Performance.kappasq(prefix, CAFFE_ROOT)
+            result = Performance.kappasq(prefix, CAFFE_ROOT, optimizewrt)
         else:
             print 'ERROR: Unknown perfomance measure %s' % optimize
 
