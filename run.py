@@ -131,10 +131,10 @@ with open(args.experiment + '/tmp/genparams.pkl', 'wb') as f:
 for i in range(1, len(smconfig.tokens) + 1):
 
     # replace OPTIMIZE{...} with OPTIMIZE_name in the .prototxt template file
-    tmpl_trainnet = string.replace(tmpl_trainnet, smconfig.tokens[i]['description'], '_' + smconfig.tokens[i]['name'])
+    tmpl_trainnet = string.replace(tmpl_trainnet, smconfig.tokens[i]['description'], '_' + smconfig.tokens[i]['name'], 1)
     tmpl_solver = string.replace(tmpl_solver, smconfig.tokens[i]['description'], '_' + smconfig.tokens[i]['name'], 1)
     if args.optimize == 'kappa':
-        tmpl_valnet = string.replace(tmpl_valnet, smconfig.tokens[i]['description'], '_' + smconfig.tokens[i]['name'])
+        tmpl_valnet = string.replace(tmpl_valnet, smconfig.tokens[i]['description'], '_' + smconfig.tokens[i]['name'], 1)
 
 # store template files
 with open(args.experiment + '/tmp/template_trainval.prototxt', 'w') as f:
