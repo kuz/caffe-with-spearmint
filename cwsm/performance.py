@@ -15,12 +15,12 @@ class Performance:
     @staticmethod
     def loss(prefix, wrt):
         logbuffer = open('../caffeout/%s_log.txt' % prefix, 'r').read()
-        pattern = re.compile('Test net output #[0-9]+: loss = [0-9]+\.[0-9]+')
+        pattern = re.compile('Test net output #[0-9]+: loss = [0-9]+\.[0-9]+(?:e-?\d+)?')
         matches = re.findall(pattern, logbuffer)
         if wrt == 'last':
-            result = float(re.search('[0-9]+\.[0-9]+', matches[-1]).group(0))
+            result = float(re.search('[0-9]+\.[0-9]+(?:e-?\d+)?', matches[-1]).group(0))
         elif wrt == 'best':
-            result = min([float(re.search('[0-9]+\.[0-9]+', match).group(0)) for match in matches])
+            result = min([float(re.search('[0-9]+\.[0-9]+(?:e-?\d+)?', match).group(0)) for match in matches])
         else:
             raise ValueError('Unknown optimizewrt value: %s.', wrt)
         return result
@@ -28,12 +28,12 @@ class Performance:
     @staticmethod
     def accuracy(prefix, wrt):
         logbuffer = open('../caffeout/%s_log.txt' % prefix, 'r').read()
-        pattern = re.compile('Test net output #[0-9]+: accuracy = [0-9]+\.[0-9]+')
+        pattern = re.compile('Test net output #[0-9]+: accuracy = [0-9]+\.[0-9]+(?:e-?\d+)?')
         matches = re.findall(pattern, logbuffer)
         if wrt == 'last':
-            result = float(re.search('[0-9]+\.[0-9]+', matches[-1]).group(0))
+            result = float(re.search('[0-9]+\.[0-9]+(?:e-?\d+)?', matches[-1]).group(0))
         elif wrt == 'best':
-            result = max([float(re.search('[0-9]+\.[0-9]+', match).group(0)) for match in matches])
+            result = max([float(re.search('[0-9]+\.[0-9]+(?:e-?\d+)?', match).group(0)) for match in matches])
         else:
             raise ValueError('Unknown optimizewrt value: %s.', wrt)
 
