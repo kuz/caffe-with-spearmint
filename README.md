@@ -47,7 +47,7 @@ myexperiment
       trainval.prototxt     # this one too
   mongodb                   # [created automatically] Spearmint holds its stuff here
   spearmint                 # [created automatically] Spearmint config and optimization function definition
-    output                  # [created automatically] Spearming output files
+    output                  # [created automatically] Spearmint output files
   tmp                       # [created automatically] experiment run specific data
 ```
 
@@ -68,7 +68,7 @@ layer {
   top: "accuracy"
 }
 ```
-If you are optizing loss then you should have a layer named "loss", something like
+If you are optmizing w.r.t. loss then you should have a layer named "loss", something like
 ```
 layer {
   name: "loss"
